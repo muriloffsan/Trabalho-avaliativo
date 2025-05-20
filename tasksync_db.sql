@@ -1,70 +1,119 @@
-# TaskSync
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Tempo de geração: 20-Maio-2025 às 16:59
+-- Versão do servidor: 10.4.27-MariaDB
+-- versão do PHP: 8.2.0
 
-TaskSync é um gerenciador de tarefas simples, desenvolvido em PHP e MySQL, com interface web responsiva. O sistema permite cadastrar usuários, criar tarefas, editar, excluir e alterar o status das tarefas em um quadro Kanban.
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-## Funcionalidades
 
-- Cadastro de usuários
-- Cadastro de tarefas com responsável, descrição, setor e prioridade
-- Edição e exclusão de tarefas
-- Alteração de status das tarefas (A Fazer, Fazendo, Concluído)
-- Interface responsiva e intuitiva
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-## Estrutura do Projeto
+--
+-- Banco de dados: `tasksync_db`
+--
 
-```
-add_task_page.php        # Página para adicionar nova tarefa
-add_task.php             # Lógica para inserir tarefa no banco
-add_user_page.php        # Página para adicionar novo usuário
-add_user.php             # Lógica para inserir usuário no banco
-change_status.php        # Altera o status de uma tarefa
-config.php               # Configuração de conexão com o banco de dados
-delete_task.php          # Exclui uma tarefa
-edit_task.php            # Edita uma tarefa existente
-index.php                # Página principal com o quadro de tarefas
-style.css                # Estilos da aplicação
-tasksync_db.sql          # Script SQL do banco de dados com dados de exemplo
-```
+-- --------------------------------------------------------
 
-## Pré-requisitos
+--
+-- Estrutura da tabela `tasks`
+--
 
-- PHP 7.x ou superior
-- MySQL/MariaDB
-- Servidor web (Apache recomendado)
-- Extensão mysqli habilitada no PHP
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `description` text NOT NULL,
+  `sector` varchar(255) NOT NULL,
+  `priority` enum('baixa','média','alta') NOT NULL,
+  `status` enum('a fazer','fazendo','concluído') DEFAULT 'a fazer',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-## Instalação
+--
+-- Extraindo dados da tabela `tasks`
+--
 
-1. **Clone ou copie os arquivos para o diretório do seu servidor web.**
+INSERT INTO `tasks` (`id`, `user_id`, `description`, `sector`, `priority`, `status`, `created_at`) VALUES
+(5, 3, 'Desativar energia do campo inteiro', 'Produção', 'média', 'fazendo', '2025-05-20 11:54:55'),
+(6, 4, 'Trocar os lixos', 'Banheiro', 'média', 'concluído', '2025-05-20 12:27:10'),
+(7, 2, 'Organizar a sala', 'Banheiro', 'média', 'a fazer', '2025-05-20 12:50:05'),
+(8, 1, 'Destruir Pendrive', 'Sala', 'alta', 'a fazer', '2025-05-20 12:54:36'),
+(9, 3, 'Encontar novos clientes', 'Municipal', 'baixa', 'a fazer', '2025-05-20 13:14:14');
 
-2. **Importe o banco de dados:**
+-- --------------------------------------------------------
 
-   - No phpMyAdmin ou via terminal, importe o arquivo `tasksync_db.sql` para criar as tabelas e inserir dados de exemplo:
+--
+-- Estrutura da tabela `users`
+--
 
-   ```
-   mysql -u seu_usuario -p tasksync_db < tasksync_db.sql
-   ```
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-3. **Configure o acesso ao banco de dados em [`config.php`](config.php):**
+--
+-- Extraindo dados da tabela `users`
+--
 
-   Verifique se os dados de acesso (`DB_SERVER`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`) estão corretos para o seu ambiente.
+INSERT INTO `users` (`id`, `name`) VALUES
+(1, 'Murilo'),
+(2, 'Pedro Zocatelli'),
+(3, 'Fabio Penetra'),
+(4, 'Cassio williams'),
+(5, 'João paulo');
 
-4. **Acesse o sistema pelo navegador:**
+--
+-- Índices para tabelas despejadas
+--
 
-   ```
-   http://localhost/Trabalho%20avaliativo/index.php
-   ```
+--
+-- Índices para tabela `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
-## Observações
+--
+-- Índices para tabela `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
 
-- O sistema não possui autenticação de usuários.
-- Recomenda-se utilizar em ambiente local ou restrito.
-- Para customizar estilos, edite o arquivo [`style.css`](style.css).
+--
+-- AUTO_INCREMENT de tabelas despejadas
+--
 
-## Licença
+--
+-- AUTO_INCREMENT de tabela `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
-Este projeto é apenas para fins acadêmicos e de aprendizado.
+--
+-- AUTO_INCREMENT de tabela `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
----
+--
+-- Restrições para despejos de tabelas
+--
 
-Desenvolvido por [Seu Nome]
+--
+-- Limitadores para a tabela `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

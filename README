@@ -1,6 +1,6 @@
 # TaskSync
 
-TaskSync é um gerenciador de tarefas simples desenvolvido em PHP e MySQL, com interface web responsiva. Ele permite cadastrar usuários, criar tarefas, editar, excluir e alterar o status das tarefas em um quadro Kanban.
+TaskSync é um gerenciador de tarefas simples, desenvolvido em PHP e MySQL, com interface web responsiva. O sistema permite cadastrar usuários, criar tarefas, editar, excluir e alterar o status das tarefas em um quadro Kanban.
 
 ## Funcionalidades
 
@@ -23,14 +23,13 @@ delete_task.php          # Exclui uma tarefa
 edit_task.php            # Edita uma tarefa existente
 index.php                # Página principal com o quadro de tarefas
 style.css                # Estilos da aplicação
-Imagens/
-    TaskSyncLogo.png     # Logo do sistema
+tasksync_db.sql          # Script SQL do banco de dados com dados de exemplo
 ```
 
 ## Pré-requisitos
 
 - PHP 7.x ou superior
-- MySQL
+- MySQL/MariaDB
 - Servidor web (Apache recomendado)
 - Extensão mysqli habilitada no PHP
 
@@ -38,39 +37,23 @@ Imagens/
 
 1. **Clone ou copie os arquivos para o diretório do seu servidor web.**
 
-2. **Crie o banco de dados e as tabelas:**
+2. **Importe o banco de dados:**
 
-```sql
-CREATE DATABASE tasksync_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   - No phpMyAdmin ou via terminal, importe o arquivo `tasksync_db.sql` para criar as tabelas e inserir dados de exemplo:
 
-USE tasksync_db;
-
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE tasks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    description TEXT NOT NULL,
-    sector VARCHAR(100) NOT NULL,
-    priority ENUM('baixa','média','alta') NOT NULL,
-    status ENUM('a fazer','fazendo','concluído') NOT NULL DEFAULT 'a fazer',
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-```
+   ```
+   mysql -u seu_usuario -p tasksync_db < tasksync_db.sql
+   ```
 
 3. **Configure o acesso ao banco de dados em [`config.php`](config.php):**
 
-Verifique se os dados de acesso (`DB_SERVER`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`) estão corretos para o seu ambiente.
+   Verifique se os dados de acesso (`DB_SERVER`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`) estão corretos para o seu ambiente.
 
 4. **Acesse o sistema pelo navegador:**
 
-```
-http://localhost/Trabalho%20avaliativo/index.php
-```
+   ```
+   http://localhost/Trabalho%20avaliativo/index.php
+   ```
 
 ## Observações
 
